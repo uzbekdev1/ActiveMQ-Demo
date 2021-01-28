@@ -27,12 +27,10 @@ namespace ActiveMQServer
             using var session = connection.CreateSession();
             var destination = SessionUtil.GetDestination(session, "queue://lot-bid");
             using var producer = session.CreateProducer(destination);
-            var timeout = TimeSpan.FromSeconds(10);
             using var consumer = session.CreateConsumer(destination);
 
             connection.Start();
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
-            producer.RequestTimeout = timeout;
 
             consumer.Listener += OnMessage;
 

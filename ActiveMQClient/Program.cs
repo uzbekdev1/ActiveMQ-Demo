@@ -23,25 +23,26 @@ namespace ActiveMQClient
             using var session = connection.CreateSession();
             var destination = SessionUtil.GetDestination(session, "queue://lot-bid");
             using var producer = session.CreateProducer(destination);
-            var timeout = TimeSpan.FromSeconds(10);
 
             connection.Start();
             producer.DeliveryMode = MsgDeliveryMode.Persistent;
-            producer.RequestTimeout = timeout;
 
             while (true)
             {
                 try
                 {
-                    var id = new Random().Next(1, 100000);
-                    var message = JsonConvert.SerializeObject(new LotItem
+                    var counter = new Random().Next(1, 100000);
+                    var item = new LotItem
                     {
-                        Contract = id,
+                        Contract = counter,
                         Date = DateTime.UtcNow,
-                        Lot = id,
-                        Price = 100m * id
-                    });
+                        Lot = counter,
+                        Price = 100m * counter,
+                        User = $"{Guid.NewGuid()}"
+                    };
+                    var message = JsonConvert.SerializeObject(item);
                     var request = session.CreateTextMessage(message);
+
                     producer.Send(request);
 
                     Console.WriteLine(message);

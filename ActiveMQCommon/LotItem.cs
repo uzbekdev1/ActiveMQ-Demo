@@ -5,6 +5,8 @@ namespace ActiveMQCommon
     public class LotItem
     {
 
+        public string User { get; set; }
+
         public long Contract { get; set; }
 
         public DateTime Date { get; set; }
