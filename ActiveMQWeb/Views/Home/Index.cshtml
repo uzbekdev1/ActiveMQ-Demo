@@ -1,0 +1,36 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+</div>
+
+@section Scripts
+{
+    
+    <script src="~/lib/stomq/stomp.min.js"></script>
+    <script type="text/javascript">
+
+        (function () {
+
+            var url = "ws://localhost:61614/stomp";
+            var client = Stomp.client(url);
+
+            client.connect("", "",
+                function () {
+                    
+                    client.subscribe("/topic/stocks",
+                        function (message) {
+                            console.log(message.body);
+                        }, {});
+
+                    client.send("/topic/stocks", {}, "Using STOMP Over WebSockets!!!");
+
+                });
+        })
+            ();
+
+    </script>
+}
